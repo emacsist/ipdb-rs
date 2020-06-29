@@ -5,8 +5,6 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
 use std::process::exit;
-use std::str::FromStr;
-use std::time::Instant;
 
 extern crate serde;
 extern crate serde_json;
@@ -116,7 +114,7 @@ fn init_ipdb(ipdb: &mut IpdbObject) {
 }
 
 fn read_node(ipdb: &IpdbObject, node: usize, index: usize) -> usize {
-    let off = (node * 8 + index * 4);
+    let off = node * 8 + index * 4;
     u32::from_be_bytes([
         ipdb.data[off],
         ipdb.data[off + 1],
@@ -127,7 +125,7 @@ fn read_node(ipdb: &IpdbObject, node: usize, index: usize) -> usize {
 
 pub fn find_node(binary: &Vec<u8>) -> usize {
     let mut node: usize = 0;
-    let bit = (binary.len() * 8);
+    let bit = binary.len() * 8;
     if bit == 32 {
         node = IPDB.v4offset;
     }

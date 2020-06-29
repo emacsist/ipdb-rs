@@ -1,18 +1,12 @@
 extern crate serde;
 extern crate serde_json;
 
-use serde_json::Error;
-use std::collections::HashMap;
-use std::fs::File;
-use std::io::Read;
-use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
-use std::process::exit;
+use std::net::IpAddr;
 use std::str;
 use std::str::FromStr;
 
 mod helper;
 
-use helper::IpdbObject;
 use helper::IPDB;
 
 pub fn find(addr: &str, lan: &str) -> Result<Vec<String>, &'static str> {
