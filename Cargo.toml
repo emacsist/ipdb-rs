@@ -1,0 +1,12 @@
+[package]
+name = "ipdbv4-rust"
+version = "0.1.0"
+authors = ["emacsist <emacsist@qq.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+lazy_static = "1.4.0"
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
