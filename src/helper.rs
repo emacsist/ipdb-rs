@@ -97,10 +97,7 @@ fn init_ipdb(ipdb: &mut IpdbObject) {
         Ok(meta) => {
             ipdb.node_count = meta.node_count;
             ipdb.set_meta(meta);
-            println!(
-                "meta => {}",
-                serde_json::to_string_pretty(&ipdb.meta).unwrap()
-            );
+            println!("meta => {}", serde_json::to_string_pretty(&ipdb.meta).unwrap());
         }
         Err(e) => {
             eprintln!("get ipdb meta erro! {:?}", e);
@@ -133,14 +130,9 @@ fn init_ipdb(ipdb: &mut IpdbObject) {
 
 fn read_node(ipdb: &IpdbObject, node: usize, index: usize) -> usize {
     let off = node * 8 + index * 4;
-    u32::from_be_bytes([
-        ipdb.data[off],
-        ipdb.data[off + 1],
-        ipdb.data[off + 2],
-        ipdb.data[off + 3],
-    ])
-    .try_into()
-    .expect("Unexpected u32 to usize in read_node")
+    u32::from_be_bytes([ipdb.data[off], ipdb.data[off + 1], ipdb.data[off + 2], ipdb.data[off + 3]])
+        .try_into()
+        .expect("Unexpected u32 to usize in read_node")
 }
 
 pub fn find_node(binary: &[u8]) -> usize {
