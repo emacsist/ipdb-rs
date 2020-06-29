@@ -1,3 +1,11 @@
+#![warn(
+    clippy::all,
+    clippy::restriction,
+    clippy::pedantic,
+    clippy::nursery,
+    clippy::cargo
+)]
+
 extern crate serde;
 extern crate serde_json;
 
@@ -5,10 +13,14 @@ use std::net::IpAddr;
 use std::str;
 use std::str::FromStr;
 
+/// 一些 helper 方法
 mod helper;
 
 use helper::IPDB;
 
+/// 根据 IP 查找地址,
+/// 例如 find("58.250.137.36", "CN")
+#[inline]
 pub fn find(addr: &str, lan: &str) -> Result<Vec<String>, &'static str> {
     if !IPDB.meta.languages.contains_key(lan) {
         return Err("not support language!");

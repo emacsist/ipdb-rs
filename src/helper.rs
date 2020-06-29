@@ -1,39 +1,56 @@
+/// 一些 helper 方法及初始化
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use serde_json::Error;
 use std::collections::HashMap;
+use std::convert::TryInto;
 use std::fs::File;
 use std::io::Read;
-use std::process::exit;
 
 extern crate serde;
 extern crate serde_json;
 
+/// ipdb 的文件名
 const IPDB_FILE_NAME: &str = "ipipfree.ipdb";
 
+/// IPDB 的元数据结构
 #[derive(Serialize, Deserialize, Debug)]
 pub struct MetaData {
+    /// 文件构建的 timestamp
     pub build: usize,
+    /// IP 版本
     pub ip_version: u8,
+    /// 节点数
     pub node_count: usize,
+    /// 语言
     pub languages: HashMap<String, u32>,
+    /// 字段
     pub fields: Vec<String>,
+    /// 总大小
     pub total_size: usize,
 }
 
+/// IPDB 的整体对象
 pub struct IpdbObject {
+    /// 文件大小
     pub file_size: usize,
+    /// 节点数
     pub node_count: usize,
+    /// 二进制数据
     pub data: Vec<u8>,
+    /// IPv4 的偏移
     pub v4offset: usize,
+    /// Meta 对象
     pub meta: MetaData,
 }
 
 impl IpdbObject {
-    pub fn set_data(&mut self, data: Vec<u8>) {
-        self.data.extend_from_slice(&data);
+    /// 设置 byte 数据, 不包括 meta
+    pub fn set_data(&mut self, data: &[u8]) {
+        self.data.extend_from_slice(data);
     }
 
+    /// 设置 meta 对象
     pub fn set_meta(&mut self, meta: MetaData) {
         self.meta = meta
     }
@@ -41,6 +58,7 @@ impl IpdbObject {
 
 // 初始化
 lazy_static! {
+    /// IPDB 全局静态对象, 只初始化一次
     pub static ref IPDB: IpdbObject = {
         let mut ipdb = IpdbObject {
             file_size: 0,
@@ -61,20 +79,18 @@ lazy_static! {
     };
 }
 
+/// 初始化 ipdb
 fn init_ipdb(ipdb: &mut IpdbObject) {
-    let mut file = File::open(IPDB_FILE_NAME).unwrap();
-    let mut file_bytes: Vec<u8> = Vec::with_capacity(file.metadata().unwrap().len() as usize);
-    if let Err(err) = file.read_to_end(&mut file_bytes) {
-        println!("{:?}", err);
-        exit(-1);
-    }
-
+    let mut file_bytes = std::fs::read(IPDB_FILE_NAME).expect("failed to open ipdb file!");
     ipdb.file_size = file_bytes.len();
     //ipdb.set_data(dat);
 
-    let meta_len = u32::from_be_bytes([file_bytes[0], file_bytes[1], file_bytes[2], file_bytes[3]]);
+    let meta_len: usize =
+        u32::from_be_bytes([file_bytes[0], file_bytes[1], file_bytes[2], file_bytes[3]])
+            .try_into()
+            .expect("unexpectd u32 to usize in meta len");
 
-    let to_index = (meta_len + 4) as usize;
+    let to_index = meta_len + 4;
     let meta_bytes = &file_bytes[4..to_index];
     let meta_str = unsafe { std::str::from_utf8_unchecked(meta_bytes) };
     let meta_result: Result<MetaData, Error> = serde_json::from_str(meta_str);
@@ -89,7 +105,7 @@ fn init_ipdb(ipdb: &mut IpdbObject) {
         panic!("parse meta error !");
     }
 
-    ipdb.set_data(file_bytes[to_index..].to_vec());
+    ipdb.set_data(&file_bytes[to_index..]);
     println!(
         "file len {}, meta len {}, data len {}. is equals = {}",
         ipdb.file_size,
@@ -120,12 +136,14 @@ fn read_node(ipdb: &IpdbObject, node: usize, index: usize) -> usize {
         ipdb.data[off + 1],
         ipdb.data[off + 2],
         ipdb.data[off + 3],
-    ]) as usize
+    ])
+    .try_into()
+    .expect("Unexpected u32 to usize in read_node")
 }
 
 pub fn find_node(binary: &[u8]) -> usize {
     let mut node: usize = 0;
-    let bit = binary.len() * 8;
+    let bit: u8 = (binary.len() * 8).try_into().expect("convert to u8 error");
     if bit == 32 {
         node = IPDB.v4offset;
     }
@@ -133,7 +151,10 @@ pub fn find_node(binary: &[u8]) -> usize {
         if node > IPDB.node_count {
             break;
         }
-        let index = (1 & ((binary[i / 8]) >> (7 - (i % 8)) as u8)) as usize;
+        let ii: usize = i.try_into().expect("convert to usize error");
+        let index: usize = (1 & ((binary[ii / 8]) >> (7 - (i % 8))))
+            .try_into()
+            .expect("Unexpect to usize in find_node");
         node = read_node(&IPDB, node, index);
     }
     if node > IPDB.node_count {
@@ -143,11 +164,15 @@ pub fn find_node(binary: &[u8]) -> usize {
 }
 
 pub fn resolve(node: usize) -> Result<&'static str, &'static str> {
-    let resoloved = (node - IPDB.node_count + IPDB.node_count * 8) as usize;
-    if resoloved > IPDB.file_size as usize {
+    let resoloved: usize = (node - IPDB.node_count + IPDB.node_count * 8)
+        .try_into()
+        .expect("Unexpected usize in resolve ");
+    if resoloved > IPDB.file_size {
         return Err("database resolve error");
     }
-    let size = u32::from_be_bytes([0, 0, IPDB.data[resoloved], IPDB.data[resoloved + 1]]) as usize;
+    let size: usize = u32::from_be_bytes([0, 0, IPDB.data[resoloved], IPDB.data[resoloved + 1]])
+        .try_into()
+        .expect("Unexpected usize in resolve");
     if IPDB.data.len() < (resoloved + 2 + size) {
         return Err("database resolve error");
     }

@@ -3,10 +3,23 @@ name = "ipdbv4-rust"
 version = "0.1.0"
 authors = ["emacsist <emacsist@qq.com>"]
 edition = "2018"
-
+description = "IPDB 地址库的 rust 非官方版本"
+keywords = ["ipdb", "rust"]
+categories = ["parsing"]
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/emacsist/ipdb-rs.git"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 lazy_static = "1.4.0"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "my_benchmark"
+harness = false
+path = "src/benches/my_benchmark.rs"
