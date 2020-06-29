@@ -39,11 +39,11 @@ pub fn find(addr: &str, lan: &str) -> Result<Vec<String>, &'static str> {
     if node == 0 {
         return Err("ip not found");
     }
-    return match helper::resolve(node) {
+    match helper::resolve(node) {
         Ok(data) => Ok(data
-            .splitn(IPDB.meta.fields.len() * IPDB.meta.languages.len(), "\t")
+            .splitn(IPDB.meta.fields.len() * IPDB.meta.languages.len(), '\t')
             .map(|s| s.to_string())
             .collect()),
         Err(err) => Err(err),
-    };
+    }
 }

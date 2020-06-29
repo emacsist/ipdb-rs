@@ -9,7 +9,7 @@ use std::process::exit;
 extern crate serde;
 extern crate serde_json;
 
-const IPDB_FILE_NAME: &'static str = "ipipfree.ipdb";
+const IPDB_FILE_NAME: &str = "ipipfree.ipdb";
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct MetaData {
@@ -139,7 +139,7 @@ pub fn find_node(binary: &Vec<u8>) -> usize {
     if node > IPDB.node_count {
         return node;
     }
-    return 0;
+    0
 }
 
 pub fn resolve(node: usize) -> Result<&'static str, &'static str> {
@@ -154,6 +154,6 @@ pub fn resolve(node: usize) -> Result<&'static str, &'static str> {
 
     let end = resoloved + 2 + size;
     let data = unsafe { std::str::from_utf8_unchecked(&IPDB.data[resoloved + 2..end]) };
-    return Ok(data);
+    Ok(data)
     //    Err("database resolve error. decode error!")
 }
