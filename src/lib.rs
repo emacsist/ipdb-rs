@@ -20,8 +20,10 @@ use helper::IPDB;
 
 /// 根据 IP 查找地址,
 /// 例如 find("58.250.137.36", "CN")
+/// # Errors
+/// 如果有任何异常, 只返回描述
 #[inline]
-pub fn find(addr: &str, lan: &str) -> Result<Vec<String>, &'static str> {
+pub fn find(addr: &str, lan: &str) -> Result<Vec<&'static str>, &'static str> {
     if !IPDB.meta.languages.contains_key(lan) {
         return Err("not support language!");
     }
@@ -52,10 +54,9 @@ pub fn find(addr: &str, lan: &str) -> Result<Vec<String>, &'static str> {
         return Err("ip not found");
     }
     match helper::resolve(node) {
-        Ok(data) => return Ok(data
+        Ok(data) => Ok(data
             .splitn(IPDB.meta.fields.len() * IPDB.meta.languages.len(), '\t')
-            .map(|s| s.to_string())
-            .collect()),
+            .collect::<Vec<&str>>()),
         Err(err) => Err(err),
     }
 }

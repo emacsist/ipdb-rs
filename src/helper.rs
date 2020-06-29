@@ -6,7 +6,6 @@ use std::collections::HashMap;
 use std::convert::TryInto;
 use std::fs;
 
-
 extern crate serde;
 extern crate serde_json;
 
@@ -94,15 +93,18 @@ fn init_ipdb(ipdb: &mut IpdbObject) {
     let meta_bytes = &file_bytes[4..to_index];
     let meta_str = unsafe { std::str::from_utf8_unchecked(meta_bytes) };
     let meta_result: Result<MetaData, Error> = serde_json::from_str(meta_str);
-    if let Ok(meta) = meta_result {
-        ipdb.node_count = meta.node_count;
-        ipdb.set_meta(meta);
-        println!(
-            "meta => {}",
-            serde_json::to_string_pretty(&ipdb.meta).unwrap()
-        );
-    } else {
-        panic!("parse meta error !");
+    match meta_result {
+        Ok(meta) => {
+            ipdb.node_count = meta.node_count;
+            ipdb.set_meta(meta);
+            println!(
+                "meta => {}",
+                serde_json::to_string_pretty(&ipdb.meta).unwrap()
+            );
+        }
+        Err(e) => {
+            eprintln!("get ipdb meta erro! {:?}", e);
+        }
     }
 
     ipdb.set_data(&file_bytes[to_index..]);
