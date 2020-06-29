@@ -5,7 +5,7 @@ use serde_json::Error;
 use std::collections::HashMap;
 use std::convert::TryInto;
 use std::fs;
-use std::io::Read;
+
 
 extern crate serde;
 extern crate serde_json;
@@ -81,7 +81,7 @@ lazy_static! {
 
 /// 初始化 ipdb
 fn init_ipdb(ipdb: &mut IpdbObject) {
-    let mut file_bytes = fs::read(IPDB_FILE_NAME).expect("failed to open ipdb file!");
+    let file_bytes = fs::read(IPDB_FILE_NAME).expect("failed to open ipdb file!");
     ipdb.file_size = file_bytes.len();
     //ipdb.set_data(dat);
 

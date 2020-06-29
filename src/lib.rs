@@ -52,7 +52,7 @@ pub fn find(addr: &str, lan: &str) -> Result<Vec<String>, &'static str> {
         return Err("ip not found");
     }
     match helper::resolve(node) {
-        Ok(data) => Ok(data
+        Ok(data) => return Ok(data
             .splitn(IPDB.meta.fields.len() * IPDB.meta.languages.len(), '\t')
             .map(|s| s.to_string())
             .collect()),
