@@ -123,7 +123,7 @@ fn read_node(ipdb: &IpdbObject, node: usize, index: usize) -> usize {
     ]) as usize
 }
 
-pub fn find_node(binary: &Vec<u8>) -> usize {
+pub fn find_node(binary: &[u8]) -> usize {
     let mut node: usize = 0;
     let bit = binary.len() * 8;
     if bit == 32 {
