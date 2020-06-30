@@ -4,7 +4,7 @@ unofficial rust version for https://github.com/ipipdotnet
 
 Any contributions are welcome ~
 
-# device
+# test env device
 
 ```bash
                           ./+o+-       
@@ -40,9 +40,17 @@ Found 3 outliers among 100 measurements (3.00%)
   1 (1.00%) high severe
 ```
 
-## vs java
+## vs java version
 
-# vs java version
+> JDK java version "1.8.0_91"
+
+```xml
+        <dependency>
+            <groupId>net.ipip</groupId>
+            <artifactId>ipdb</artifactId>
+            <version>1.1.3</version>
+        </dependency>
+```
 
 ```java
     @Test
