@@ -2,6 +2,8 @@
 
 unofficial rust version for https://github.com/ipipdotnet
 
+Any contributions are welcome ~
+
 # device
 
 ```bash
