@@ -1,3 +1,7 @@
+# desc
+
+unofficial rust version for https://github.com/ipipdotnet
+
 # device
 
 ```bash
@@ -25,13 +29,13 @@
 # bench
 
 ```bash
-ipdbv4                  time:   [695.17 ns 695.31 ns 695.47 ns]
-                        change: [-20.318% -20.291% -20.265%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 5 outliers among 100 measurements (5.00%)
+ipdbv4                  time:   [694.10 ns 694.31 ns 694.52 ns]
+                        change: [-0.1452% -0.1046% -0.0615%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 3 outliers among 100 measurements (3.00%)
   1 (1.00%) low mild
-  2 (2.00%) high mild
-  2 (2.00%) high severe
+  1 (1.00%) high mild
+  1 (1.00%) high severe
 ```
 
 

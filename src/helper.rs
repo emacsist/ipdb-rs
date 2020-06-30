@@ -97,7 +97,7 @@ fn init_ipdb(ipdb: &mut IpdbObject) {
         Ok(meta) => {
             ipdb.node_count = meta.node_count;
             ipdb.set_meta(meta);
-            println!("meta => {}", serde_json::to_string_pretty(&ipdb.meta).unwrap());
+            //println!("meta => {}", serde_json::to_string_pretty(&ipdb.meta).unwrap());
         }
         Err(e) => {
             eprintln!("get ipdb meta erro! {:?}", e);
@@ -105,13 +105,13 @@ fn init_ipdb(ipdb: &mut IpdbObject) {
     }
 
     ipdb.set_data(&file_bytes[to_index..]);
-    println!(
-        "file len {}, meta len {}, data len {}. is equals = {}",
-        ipdb.file_size,
-        meta_bytes.len() + 4,
-        ipdb.data.len(),
-        ipdb.file_size == (meta_bytes.len() + 4 + ipdb.data.len())
-    );
+    // println!(
+    //     "file len {}, meta len {}, data len {}. is equals = {}",
+    //     ipdb.file_size,
+    //     meta_bytes.len() + 4,
+    //     ipdb.data.len(),
+    //     ipdb.file_size == (meta_bytes.len() + 4 + ipdb.data.len())
+    // );
 
     if 0x01 == (ipdb.meta.ip_version & 0x01) {
         let mut node = 0;
