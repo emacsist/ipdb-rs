@@ -14,12 +14,14 @@ use helper::IPDB;
 
 /// 根据 IP 查找地址, 返回的是 `[国,省,市]`, 参考 ipdb 官网 https://github.com/ipipdotnet
 /// 例如
+///
 /// ```rust
 ///     use ipdb_rs::find;
 ///     if let Ok(addr) = find("58.250.137.36", "CN") {
 ///         println!("addr {:?}", addr); // ["中国", "广东", "深圳"]
 ///     };
 /// ```
+///
 /// # Errors
 /// 如果有任何异常, 只返回描述
 #[inline]
