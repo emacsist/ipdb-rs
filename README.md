@@ -40,6 +40,49 @@ Found 3 outliers among 100 measurements (3.00%)
   1 (1.00%) high severe
 ```
 
+## vs java
+
+# vs java version
+
+```java
+    @Test
+    public void testJavaIPDB() {
+        for (int i = 0; i < 100000; i++) {
+            IPDB.find("113.67.126.164");
+        }
+        final long start = System.currentTimeMillis();
+        long sum = 0;
+        for (int i = 0; i < 1000000; i++) {
+            final String[] v = IPDB.find("113.67.126.164");
+            if (v != null) {
+                sum += v.length;
+            }
+        }
+        System.out.println("cost " + (System.currentTimeMillis() - start) + " ms, total " + (sum / 3));
+    }
+```
+
+```rust
+    use ipdb_rs as ipdb;
+    let ipadd = ipdb::find("113.67.126.164", "CN");
+    println!("ip addr {:?}", ipadd);
+    let now = Instant::now();
+    let mut sum: usize = 0;
+    for i in 0..1000000 {
+        if let Ok(v) = ipdb::find("113.67.126.164", "CN") {
+            sum += v.len();
+        }
+    }
+    println!("cost {} ms, total {}", now.elapsed().as_millis(), sum / 3);
+```
+
+```bash
+Rust 
+cost 657 ms, total 1000000
+
+Java
+cost 847 ms, total 1000000
+```
 
 # perf
 
