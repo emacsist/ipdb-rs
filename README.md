@@ -41,22 +41,6 @@ Found 5 outliers among 100 measurements (5.00%)
 ```bash
 perf stat --event task-clock,context-switches,page-faults,cycles,instructions,branches,branch-misses,cache-references,cache-misses target/release/ipdbv4-rust
 
-## before
- Performance counter stats for 'target/release/ipdbv4-rust':
-
-        909.653020 task-clock (msec)         #    0.998 CPUs utilized
-               122 context-switches          #    0.134 K/sec
-             1,942 page-faults               #    0.002 M/sec
-     1,635,398,022 cycles                    #    1.798 GHz
-     4,113,793,740 instructions              #    2.52  insns per cycle
-       866,667,193 branches                  #  952.745 M/sec
-           495,260 branch-misses             #    0.06% of all branches
-           409,150 cache-references          #    0.450 M/sec
-           211,979 cache-misses              #   51.810 % of all cache refs
-
-       0.911265911 seconds time elapsed
-
-## after
  Performance counter stats for 'target/release/ipdbv4-rust':
 
         710.637275 task-clock (msec)         #    0.997 CPUs utilized
