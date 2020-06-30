@@ -1,5 +1,5 @@
 [package]
-name = "ipdbv4-rust"
+name = "ipdb_rs"
 version = "0.1.0"
 authors = ["emacsist <emacsist@qq.com>"]
 edition = "2018"
